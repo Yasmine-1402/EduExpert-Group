@@ -1,0 +1,1389 @@
+:root {
+  color-scheme: dark;
+  --bg: #050505;
+  --panel: rgba(10, 10, 10, 0.72);
+  --panel-strong: rgba(18, 18, 18, 0.85);
+  --text: rgba(247, 242, 236, 0.96);
+  --muted: rgba(247, 242, 236, 0.68);
+  --line: rgba(255, 255, 255, 0.1);
+  --gold: #d4a84b;
+  --gold-light: #f5e6c4;
+  --leaf: #6ed48a;
+  --blue: #6fb5ff;
+  --purple: #b48eff;
+  --shadow: 0 28px 60px rgba(0, 0, 0, 0.4);
+  --shadow-glow: 0 0 80px rgba(110, 212, 138, 0.08);
+  --radius-xl: 28px;
+  --radius-lg: 22px;
+  --chapter-pad: clamp(5rem, 10vw, 10rem);
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  min-height: 100vh;
+  background: radial-gradient(ellipse at 50% 0%, #161616 0%, #080808 40%, #020202 100%);
+  color: var(--text);
+  font-family: "Manrope", "Segoe UI", sans-serif;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+img {
+  display: block;
+  max-width: 100%;
+}
+
+/* ─── Ambient Layers ─── */
+.ambient {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.ambient--dawn {
+  background:
+    radial-gradient(circle at 15% 20%, rgba(110, 212, 138, 0.06), transparent 28%),
+    radial-gradient(circle at 82% 18%, rgba(212, 168, 75, 0.1), transparent 26%),
+    radial-gradient(circle at 55% 78%, rgba(111, 181, 255, 0.05), transparent 30%);
+  opacity: 0.6;
+}
+
+.ambient--night {
+  background:
+    radial-gradient(circle at 22% 24%, rgba(255, 255, 255, 0.06), transparent 20%),
+    radial-gradient(circle at 68% 22%, rgba(111, 181, 255, 0.08), transparent 26%),
+    radial-gradient(circle at 78% 72%, rgba(255, 255, 255, 0.04), transparent 18%);
+  opacity: 1;
+}
+
+
+
+/* ─── Growth Rail ─── */
+.growth-rail {
+  position: fixed;
+  left: 1.25rem;
+  top: 8rem;
+  bottom: 1.5rem;
+  width: 2.6rem;
+  z-index: 15;
+  pointer-events: none;
+  display: grid;
+  place-items: end center;
+}
+
+.growth-rail__stem,
+.growth-rail__vine {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 2px;
+  border-radius: 999px;
+}
+
+.growth-rail__stem {
+  top: 0;
+  bottom: 0;
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.growth-rail__vine {
+  top: 0;
+  bottom: 0;
+  height: var(--vine-height, 0%);
+  background: linear-gradient(180deg, var(--leaf), #a8e6b8);
+  box-shadow: 0 0 18px rgba(110, 212, 138, 0.35);
+  transition: height 0.15s linear;
+  transform-origin: bottom;
+}
+
+.growth-rail__tree {
+  position: relative;
+  width: 2rem;
+  height: 2rem;
+  margin-bottom: 0.2rem;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(110, 212, 138, 0.9), rgba(43, 103, 53, 0.85));
+  box-shadow: 0 0 0 4px rgba(110, 212, 138, 0.06), 0 12px 28px rgba(0, 0, 0, 0.3);
+  transform: scale(var(--tree-scale, 0.6));
+  transition: transform 0.3s var(--ease-out-expo);
+}
+
+.growth-rail__leaf {
+  position: absolute;
+  width: 0.5rem;
+  height: 0.8rem;
+  border-radius: 999px 999px 999px 0;
+  background: linear-gradient(180deg, #bbf4c6, #5abf73);
+  box-shadow: 0 0 14px rgba(110, 212, 138, 0.25);
+}
+
+.growth-rail__leaf--1 {
+  left: 0.2rem;
+  top: 0.2rem;
+  transform: rotate(-24deg);
+}
+
+.growth-rail__leaf--2 {
+  right: 0.18rem;
+  top: 0.25rem;
+  transform: rotate(32deg) scaleX(-1);
+}
+
+.growth-rail__leaf--3 {
+  left: 0.5rem;
+  bottom: 0.15rem;
+  transform: rotate(138deg);
+}
+
+.growth-rail__leaf--4 {
+  right: 0.5rem;
+  bottom: 0.15rem;
+  transform: rotate(222deg) scaleX(-1);
+}
+
+/* ─── Layout ─── */
+.experience {
+  position: relative;
+  z-index: 2;
+}
+
+.chapter {
+  position: relative;
+  min-height: 100vh;
+  padding: var(--chapter-pad) clamp(1.5rem, 5vw, 5rem);
+  display: flex;
+  align-items: center;
+  overflow: clip;
+  border-top: 1px solid rgba(255, 255, 255, 0.04);
+}
+
+.chapter::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.015), transparent 20%, rgba(0, 0, 0, 0.06));
+  pointer-events: none;
+}
+
+/* ─── Chapter Theme Backgrounds ─── */
+.chapter--dark,
+.chapter--night,
+.chapter--impact,
+.chapter--future {
+  background: radial-gradient(ellipse at 50% 20%, rgba(255, 255, 255, 0.04), transparent 50%), linear-gradient(180deg, #060606, #0a0a0a);
+}
+
+.chapter--light,
+.chapter--dawn,
+.chapter--moments {
+  background: linear-gradient(180deg, #faf6f0, #f0e8db);
+}
+
+.chapter--light,
+.chapter--dawn,
+.chapter--moments,
+.chapter--sand {
+  color: #1a1a1a;
+}
+
+.chapter--light .eyebrow,
+.chapter--dawn .eyebrow,
+.chapter--moments .eyebrow,
+.chapter--sand .eyebrow {
+  color: #9a7230;
+}
+
+.chapter--light p,
+.chapter--dawn p,
+.chapter--moments p,
+.chapter--sand p,
+.chapter--light .section-intro,
+.chapter--dawn .section-intro,
+.chapter--moments .section-intro,
+.chapter--sand .section-intro {
+  color: rgba(26, 26, 26, 0.7);
+}
+
+.chapter--light h2,
+.chapter--dawn h2,
+.chapter--moments h2,
+.chapter--sand h2,
+.chapter--light h3,
+.chapter--dawn h3,
+.chapter--moments h3,
+.chapter--sand h3 {
+  color: #1a1a1a;
+}
+
+.chapter--light .story-card--warm,
+.chapter--dawn .story-card--warm,
+.chapter--moments .story-card--warm,
+.chapter--sand .story-card--warm {
+  color: #1a1a1a;
+}
+
+.chapter--fog,
+.chapter--voices {
+  background: linear-gradient(180deg, rgba(14, 15, 18, 0.99), rgba(9, 10, 14, 0.96));
+}
+
+.chapter--sand {
+  background: linear-gradient(180deg, #efe1cf, #d9c0a4);
+}
+
+.chapter--lilac {
+  background: linear-gradient(180deg, #0f0e18, #1a1226);
+}
+
+.chapter--legacy {
+  background: radial-gradient(ellipse at 50% 30%, rgba(110, 212, 138, 0.08), transparent 40%), linear-gradient(180deg, #06100b, #040604);
+}
+
+.chapter--cta {
+  background: radial-gradient(ellipse at 50% 80%, rgba(212, 168, 75, 0.06), transparent 40%), linear-gradient(180deg, #110e0b, #040404);
+}
+
+.chapter.is-active {
+  outline: 1px solid transparent;
+}
+
+/* ─── Content Containers ─── */
+.chapter__content {
+  width: min(1140px, 100%);
+  margin: 0 auto;
+  position: relative;
+  z-index: 1;
+}
+
+.chapter__content--centered {
+  text-align: center;
+}
+
+/* ─── Scroll Reveal Animation ─── */
+.reveal {
+  opacity: 0;
+  transform: translateY(2.5rem);
+  transition: opacity 0.9s var(--ease-out-expo), transform 0.9s var(--ease-out-expo);
+}
+
+.reveal.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ─── Typography ─── */
+.hero-logo {
+  display: block;
+  width: min(22rem, 55vw);
+  height: auto;
+  margin: 0 auto 2rem;
+  filter: drop-shadow(0 16px 48px rgba(0, 0, 0, 0.3));
+  animation: logo-float 8s ease-in-out infinite;
+}
+
+@keyframes logo-float {
+
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-0.6rem);
+  }
+}
+
+.hero h1,
+h2,
+h3 {
+  margin: 0;
+  letter-spacing: -0.035em;
+}
+
+.hero h1,
+h2 {
+  font-family: "Cormorant Garamond", Georgia, serif;
+  font-weight: 600;
+  line-height: 0.92;
+}
+
+.hero h1 {
+  font-size: clamp(2.8rem, 7vw, 6.5rem);
+  max-width: 14ch;
+  margin-inline: auto;
+  background: linear-gradient(135deg, var(--text) 60%, var(--gold-light));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+h2 {
+  font-size: clamp(2.2rem, 5.5vw, 4.5rem);
+  max-width: 16ch;
+}
+
+h3 {
+  font-family: "Cormorant Garamond", Georgia, serif;
+  font-weight: 500;
+  font-size: clamp(1.5rem, 2.8vw, 2.4rem);
+  line-height: 1.05;
+}
+
+.eyebrow {
+  margin: 0 0 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.35em;
+  font-size: 0.68rem;
+  font-weight: 600;
+  color: var(--gold);
+}
+
+.hero__lede,
+.chapter p {
+  color: var(--muted);
+  font-size: clamp(0.95rem, 1.8vw, 1.06rem);
+  line-height: 1.85;
+}
+
+.chapter--light p,
+.chapter--dawn p,
+.chapter--moments p,
+.chapter--sand p {
+  color: rgba(26, 26, 26, 0.7);
+}
+
+.hero__lede {
+  margin: 1.8rem auto 0;
+  max-width: 48ch;
+  font-weight: 400;
+}
+
+.scroll-cue {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.8rem;
+  margin-top: 3.5rem;
+  color: var(--muted);
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  font-size: 0.65rem;
+  font-weight: 600;
+}
+
+.scroll-cue__line {
+  width: 1px;
+  height: 4.5rem;
+  background: linear-gradient(180deg, transparent, var(--gold), transparent);
+  animation: scroll-bounce 2.5s ease-in-out infinite;
+}
+
+@keyframes scroll-bounce {
+
+  0%,
+  100% {
+    transform: scaleY(1);
+    opacity: 0.6;
+  }
+
+  50% {
+    transform: scaleY(1.3);
+    opacity: 1;
+  }
+}
+
+/* ─── Hero Drifts ─── */
+.hero__drift {
+  position: absolute;
+  border-radius: 999px;
+  filter: blur(14px);
+  opacity: 0.35;
+  animation: float 12s ease-in-out infinite;
+}
+
+.hero__drift--one {
+  width: 22rem;
+  height: 22rem;
+  left: -6rem;
+  top: 8rem;
+  background: radial-gradient(circle, rgba(110, 212, 138, 0.14), transparent 60%);
+}
+
+.hero__drift--two {
+  width: 30rem;
+  height: 30rem;
+  right: -10rem;
+  top: 10rem;
+  animation-delay: -4s;
+  background: radial-gradient(circle, rgba(212, 168, 75, 0.1), transparent 60%);
+}
+
+.hero__drift--three {
+  width: 20rem;
+  height: 20rem;
+  right: 18%;
+  bottom: 6rem;
+  animation-delay: -6s;
+  background: radial-gradient(circle, rgba(111, 181, 255, 0.12), transparent 60%);
+}
+
+/* ─── Shared Card Styles ─── */
+.story-card,
+.why-card,
+.experience-card,
+.impact-number,
+.voice-card,
+.door-card,
+.button,
+.legacy-tree-container,
+.timeline-card,
+.reveal-banner {
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  background: rgba(12, 12, 12, 0.65);
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(20px) saturate(1.3);
+  transition: transform 0.4s var(--ease-out-expo), box-shadow 0.4s var(--ease-out-expo), border-color 0.4s;
+}
+
+/* ─── Split Layout ─── */
+.split {
+  display: grid;
+  grid-template-columns: 1.05fr 0.95fr;
+  gap: clamp(2rem, 5vw, 4rem);
+  align-items: center;
+}
+
+.narrative,
+.section-intro {
+  margin-top: 1.4rem;
+  max-width: 56ch;
+}
+
+/* ─── Story Card (Ch1) ─── */
+.story-card {
+  border-radius: var(--radius-xl);
+  padding: 1.5rem;
+}
+
+.story-card--warm {
+  background: linear-gradient(180deg, rgba(255, 248, 239, 0.96), rgba(226, 202, 176, 0.9));
+  color: #201914;
+  border-color: rgba(212, 168, 75, 0.15);
+}
+
+.story-card--warm p,
+.story-card--warm .story-card__badge {
+  color: rgba(32, 25, 20, 0.72);
+}
+
+.story-card__badge {
+  display: inline-flex;
+  margin-bottom: 1rem;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
+
+/* ─── Photo Grid ─── */
+.photo-grid {
+  display: grid;
+  gap: 0.8rem;
+  margin-top: 1.2rem;
+}
+
+.photo-grid--three {
+  grid-template-columns: 1fr 0.9fr 1fr;
+}
+
+.photo {
+  min-height: 8rem;
+  border-radius: 16px;
+  overflow: hidden;
+  background: linear-gradient(160deg, #d2e3f8, #7ea5d9);
+}
+
+.photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  border-radius: inherit;
+  transition: transform 0.5s var(--ease-out-expo);
+}
+
+.photo:hover img {
+  transform: scale(1.05);
+}
+
+.photo--tall {
+  min-height: 12rem;
+  background: linear-gradient(160deg, #dbe7f5, #8daed3);
+}
+
+.photo--soft {
+  background: linear-gradient(150deg, #f6d66e, #d6a52d);
+}
+
+/* ─── Why Grid (Ch2) ─── */
+.why-grid,
+.door-grid,
+.impact-grid,
+.voices-grid {
+  display: grid;
+  gap: 1rem;
+  margin-top: 2.5rem;
+}
+
+.why-grid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.why-card {
+  border-radius: var(--radius-lg);
+  padding: 1.8rem 1.5rem;
+  background: rgba(12, 12, 12, 0.55);
+  position: relative;
+  overflow: hidden;
+}
+
+.why-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 30% 100%, rgba(110, 212, 138, 0.06), transparent 50%);
+  opacity: 0;
+  transition: opacity 0.4s;
+}
+
+.why-card:hover::before {
+  opacity: 1;
+}
+
+.why-card:hover {
+  transform: translateY(-4px);
+  border-color: rgba(110, 212, 138, 0.15);
+  box-shadow: 0 20px 56px rgba(0, 0, 0, 0.35);
+}
+
+.why-card__label,
+.experience-card__eyebrow,
+.impact-number p,
+.voice-card span,
+.door-card__action,
+.legacy-notes span,
+.legacy-tree__label {
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  font-size: 0.68rem;
+  font-weight: 600;
+}
+
+.why-card h3 {
+  margin: 0.5rem 0 1rem;
+}
+
+.reveal-banner {
+  margin-top: 2rem;
+  border-radius: 999px;
+  padding: 1rem 1.6rem;
+  width: fit-content;
+  background: linear-gradient(90deg, rgba(110, 212, 138, 0.12), rgba(212, 168, 75, 0.16));
+  border-color: rgba(110, 212, 138, 0.12);
+  letter-spacing: 0.04em;
+}
+
+/* ─── Door Grid (Ch3) ─── */
+.door-grid {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.door-card {
+  min-height: 18rem;
+  border-radius: var(--radius-xl);
+  padding: 1.5rem;
+  color: var(--text);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  text-align: left;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+}
+
+.door-card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: radial-gradient(circle at 50% 100%, rgba(212, 168, 75, 0.08), transparent 50%);
+  opacity: 0;
+  transition: opacity 0.4s;
+}
+
+.door-card:hover::after {
+  opacity: 1;
+}
+
+.door-card:hover,
+.door-card:focus-visible {
+  transform: translateY(-6px);
+  border-color: rgba(255, 255, 255, 0.18);
+  box-shadow: 0 24px 56px rgba(0, 0, 0, 0.4);
+  outline: none;
+}
+
+.button:hover,
+.button:focus-visible {
+  transform: translateY(-3px);
+  border-color: rgba(255, 255, 255, 0.2);
+  outline: none;
+}
+
+.door-card__icon {
+  font-size: 2.2rem;
+}
+
+.door-card__title {
+  font-size: 1.4rem;
+  font-weight: 700;
+}
+
+/* ─── Experience Stack (Ch4) ─── */
+.experience-stack {
+  display: grid;
+  gap: 1.2rem;
+  margin-top: 2.5rem;
+}
+
+.experience-card {
+  border-radius: var(--radius-xl);
+  padding: 0;
+  display: grid;
+  grid-template-columns: 1.1fr 0.9fr;
+  gap: 0;
+  align-items: stretch;
+  overflow: hidden;
+}
+
+.experience-card>div:first-child {
+  padding: 2rem 2rem 2rem 2.2rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.experience-card--purple {
+  background: linear-gradient(135deg, rgba(78, 31, 113, 0.6), rgba(20, 15, 35, 0.92));
+}
+
+.experience-card--blue {
+  background: linear-gradient(135deg, rgba(20, 70, 120, 0.6), rgba(10, 18, 38, 0.95));
+}
+
+.experience-card--sand {
+  background: linear-gradient(135deg, rgba(160, 115, 65, 0.6), rgba(45, 30, 18, 0.94));
+}
+
+.experience-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 28px 64px rgba(0, 0, 0, 0.4);
+}
+
+.experience-card__visual {
+  min-height: 16rem;
+  overflow: hidden;
+  position: relative;
+}
+
+.experience-card__visual img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.6s var(--ease-out-expo);
+}
+
+.experience-card:hover .experience-card__visual img {
+  transform: scale(1.04);
+}
+
+.experience-card__visual--purple {
+  background: radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.3), transparent 28%), linear-gradient(145deg, #ca82ff, #6f2a8d 60%, #1f0b2d);
+}
+
+.experience-card__visual--blue {
+  background: radial-gradient(circle at 60% 20%, rgba(255, 255, 255, 0.28), transparent 28%), linear-gradient(145deg, #88d3ff, #305ea7 60%, #0b1733);
+}
+
+.experience-card__visual--sand {
+  background: radial-gradient(circle at 30% 25%, rgba(255, 255, 255, 0.24), transparent 28%), linear-gradient(145deg, #f4d2a2, #b97b4a 60%, #452a1a);
+}
+
+/* ─── Impact Grid (Ch5) ─── */
+.impact-grid {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.impact-number {
+  border-radius: var(--radius-xl);
+  padding: 2rem 1.5rem;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.impact-number::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 50% 0%, rgba(212, 168, 75, 0.08), transparent 50%);
+  pointer-events: none;
+}
+
+.impact-number span {
+  display: block;
+  font-family: "Cormorant Garamond", Georgia, serif;
+  font-size: clamp(2.2rem, 5vw, 4.2rem);
+  font-weight: 600;
+  line-height: 0.9;
+  margin-bottom: 0.8rem;
+  background: linear-gradient(135deg, var(--text), var(--gold-light));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.impact-number span.impact-text {
+  font-size: clamp(1.4rem, 3vw, 2.4rem);
+  font-family: "Manrope", sans-serif;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.impact-number:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 20px 52px rgba(0, 0, 0, 0.35), 0 0 0 1px rgba(212, 168, 75, 0.1);
+}
+
+/* ─── Voices Grid (Ch6) ─── */
+.voices-grid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.voice-card {
+  border-radius: var(--radius-xl);
+  padding: 1.8rem 1.5rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.voice-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--gold), transparent);
+  opacity: 0.4;
+}
+
+.voice-card p {
+  margin: 0.5rem 0 1.2rem;
+}
+
+.voice-card span {
+  color: var(--gold);
+}
+
+.voice-card:hover {
+  transform: translateY(-3px);
+  border-color: rgba(212, 168, 75, 0.12);
+}
+
+/* ─── Gallery / Moments Wall (Ch7) ─── */
+.moments-wall {
+  margin-top: 2.5rem;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+}
+
+.moment {
+  border-radius: 20px;
+  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  overflow: hidden;
+  position: relative;
+  cursor: pointer;
+}
+
+.moment img {
+  width: 100%;
+  height: auto;
+  display: block;
+  object-fit: contain;
+  transition: transform 0.6s var(--ease-out-expo), filter 0.4s;
+}
+
+.moment::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, transparent 50%, rgba(0, 0, 0, 0.35));
+  opacity: 0;
+  transition: opacity 0.4s;
+  border-radius: inherit;
+  pointer-events: none;
+}
+
+.moment:hover img {
+  transform: scale(1.08);
+}
+
+.moment:hover::after {
+  opacity: 1;
+}
+
+
+
+
+/* ─── Legacy Tree (Ch8) — SVG-based ─── */
+.legacy-layout {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 3rem;
+  align-items: center;
+}
+
+.legacy-notes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.65rem;
+  margin-top: 1.8rem;
+}
+
+.legacy-notes span {
+  padding: 0.6rem 0.9rem;
+  border-radius: 999px;
+  border: 1px solid rgba(110, 212, 138, 0.15);
+  background: rgba(110, 212, 138, 0.04);
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: rgba(247, 242, 236, 0.8);
+}
+
+.legacy-tree-container {
+  position: relative;
+  border-radius: 32px;
+  overflow: hidden;
+  background:
+    radial-gradient(ellipse at 50% 20%, rgba(110, 212, 138, 0.12), transparent 30%),
+    radial-gradient(circle at 50% 65%, rgba(32, 69, 46, 0.3), transparent 40%),
+    linear-gradient(180deg, rgba(10, 20, 14, 0.96), rgba(4, 8, 5, 0.99));
+  padding: 2rem;
+  min-height: 44rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.legacy-tree-svg {
+  width: 100%;
+  height: 100%;
+  max-height: 40rem;
+  filter: drop-shadow(0 8px 24px rgba(0, 0, 0, 0.3));
+}
+
+/* SVG Tree Animations */
+.tree-leaf {
+  animation: leaf-sway 4s ease-in-out infinite;
+  transform-origin: bottom center;
+}
+
+.tree-leaf:nth-child(even) {
+  animation-delay: -2s;
+  animation-duration: 5s;
+}
+
+.tree-leaf:nth-child(3n) {
+  animation-delay: -1s;
+  animation-duration: 3.5s;
+}
+
+@keyframes leaf-sway {
+
+  0%,
+  100% {
+    transform: rotate(0deg);
+  }
+
+  25% {
+    transform: rotate(3deg);
+  }
+
+  75% {
+    transform: rotate(-3deg);
+  }
+}
+
+.tree-trunk-glow {
+  animation: trunk-glow 5s ease-in-out infinite;
+}
+
+@keyframes trunk-glow {
+
+  0%,
+  100% {
+    opacity: 0.15;
+  }
+
+  50% {
+    opacity: 0.3;
+  }
+}
+
+.tree-particle {
+  animation: particle-float 8s ease-in-out infinite;
+}
+
+@keyframes particle-float {
+
+  0%,
+  100% {
+    transform: translateY(0) scale(1);
+    opacity: 0.6;
+  }
+
+  50% {
+    transform: translateY(-12px) scale(1.2);
+    opacity: 1;
+  }
+}
+
+.tree-label-bg {
+  fill: rgba(0, 0, 0, 0.5);
+  rx: 12;
+  ry: 12;
+}
+
+.tree-label-text {
+  fill: rgba(247, 242, 236, 0.92);
+  font-family: "Manrope", sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  text-anchor: middle;
+  dominant-baseline: central;
+}
+
+/* ─── Future List (Ch9) ─── */
+.future-list {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.75rem;
+  margin-top: 2.5rem;
+}
+
+.future-list span {
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.04);
+  border-radius: 999px;
+  padding: 0.85rem 1.2rem;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+  font-size: 0.9rem;
+  font-weight: 500;
+  transition: transform 0.3s var(--ease-out-expo), border-color 0.3s, background 0.3s;
+}
+
+.future-list span:hover {
+  transform: translateY(-3px);
+  border-color: rgba(212, 168, 75, 0.2);
+  background: rgba(212, 168, 75, 0.06);
+}
+
+.stars {
+  position: absolute;
+  inset: 0;
+  background-image:
+    radial-gradient(circle at 12% 18%, rgba(255, 255, 255, 0.8) 0 1px, transparent 2px),
+    radial-gradient(circle at 45% 30%, rgba(255, 255, 255, 0.7) 0 1px, transparent 2px),
+    radial-gradient(circle at 72% 16%, rgba(255, 255, 255, 0.75) 0 1px, transparent 2px),
+    radial-gradient(circle at 84% 62%, rgba(255, 255, 255, 0.65) 0 1px, transparent 2px),
+    radial-gradient(circle at 28% 72%, rgba(255, 255, 255, 0.55) 0 1px, transparent 2px),
+    radial-gradient(circle at 56% 86%, rgba(255, 255, 255, 0.5) 0 1px, transparent 2px),
+    radial-gradient(circle at 91% 40%, rgba(255, 255, 255, 0.6) 0 1px, transparent 2px),
+    radial-gradient(circle at 8% 55%, rgba(255, 255, 255, 0.45) 0 1px, transparent 2px);
+  opacity: 0.7;
+  animation: twinkle 8s linear infinite;
+}
+
+/* ─── Founder Profile (Ch9) ─── */
+.founder-layout {
+  display: grid;
+  grid-template-columns: 0.8fr 1.2fr;
+  gap: clamp(3rem, 6vw, 6rem);
+  align-items: center;
+}
+
+.founder-visual {
+  position: relative;
+}
+
+.founder-photo-wrapper {
+  position: relative;
+  border-radius: 4px 60px 4px 60px;
+  overflow: hidden;
+  box-shadow: 0 24px 64px rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  background: #fff;
+  padding: 0.5rem;
+}
+
+.founder-photo-wrapper img {
+  width: 100%;
+  height: auto;
+  border-radius: 2px 54px 2px 54px;
+  display: block;
+}
+
+.founder-subtitle {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: var(--gold);
+  margin-top: 0.5rem;
+  margin-bottom: 2rem;
+}
+
+.founder-credentials {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  margin-bottom: 2.5rem;
+}
+
+.founder-credentials span {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  padding: 0.5rem 1rem;
+  border-radius: 999px;
+  border: 1px solid rgba(154, 114, 48, 0.3);
+  color: #7a5822;
+  background: rgba(154, 114, 48, 0.06);
+}
+
+.founder-bio h3 {
+  font-size: 1.4rem;
+  margin-bottom: 1.2rem;
+  color: #2c2c2c;
+}
+
+.founder-bio p {
+  color: rgba(26, 26, 26, 0.75);
+  margin-bottom: 1rem;
+  font-size: 1.05rem;
+  line-height: 1.7;
+}
+
+/* ─── Buttons ─── */
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 3.4rem;
+  padding: 0.9rem 1.8rem;
+  border-radius: 999px;
+  color: var(--text);
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 0.88rem;
+  letter-spacing: 0.03em;
+  transition: transform 0.3s var(--ease-out-expo), border-color 0.3s, box-shadow 0.3s;
+}
+
+.button--primary {
+  background: linear-gradient(135deg, var(--gold), var(--gold-light));
+  color: #1a1008;
+  border-color: rgba(212, 168, 75, 0.3);
+  box-shadow: 0 8px 28px rgba(212, 168, 75, 0.2);
+}
+
+.button--primary:hover {
+  box-shadow: 0 12px 36px rgba(212, 168, 75, 0.35);
+}
+
+.button--secondary {
+  background: rgba(255, 255, 255, 0.04);
+  border-color: rgba(255, 255, 255, 0.12);
+}
+
+.button--secondary:hover {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.cta-row {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1rem;
+  margin-top: 2.5rem;
+}
+
+.contact-info {
+  margin-top: 2rem;
+  font-size: 0.95rem;
+  color: var(--muted);
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.contact-info a {
+  color: var(--gold);
+  text-decoration: none;
+  transition: color 0.3s;
+}
+
+.contact-info a:hover {
+  color: var(--gold-light);
+}
+
+.social-links {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1.5rem;
+  margin-top: 1.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.social-links a {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  color: var(--muted);
+  font-size: 0.9rem;
+  font-weight: 500;
+  text-decoration: none;
+  transition: color 0.3s, transform 0.3s;
+}
+
+.social-links a:hover {
+  color: var(--gold);
+  transform: translateY(-1px);
+}
+
+/* ─── Chapter Navigation ─── */
+.chapter-nav {
+  position: fixed;
+  right: 1.2rem;
+  bottom: 1.2rem;
+  z-index: 25;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  max-width: min(18rem, calc(100vw - 2.4rem));
+}
+
+.chapter-nav__item {
+  width: 2.4rem;
+  height: 2.4rem;
+  border-radius: 999px;
+  display: grid;
+  place-items: center;
+  text-decoration: none;
+  color: var(--text);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  background: rgba(12, 12, 12, 0.7);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(20px) saturate(1.3);
+  font-size: 0.72rem;
+  font-weight: 600;
+  transition: transform 0.3s var(--ease-out-expo), border-color 0.3s, background 0.3s, box-shadow 0.3s;
+}
+
+.chapter-nav__item:hover {
+  transform: translateY(-2px);
+  border-color: rgba(255, 255, 255, 0.14);
+}
+
+.chapter-nav__item.is-current {
+  background: linear-gradient(135deg, rgba(110, 212, 138, 0.2), rgba(212, 168, 75, 0.14));
+  border-color: rgba(110, 212, 138, 0.2);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3), 0 0 16px rgba(110, 212, 138, 0.08);
+}
+
+/* ─── Floating Quote ─── */
+.floating-quote {
+  position: fixed;
+  inset: auto 1.4rem 6rem auto;
+  max-width: 17rem;
+  padding: 1rem 1.2rem;
+  border-radius: 18px;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  background: rgba(10, 10, 10, 0.7);
+  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.35);
+  backdrop-filter: blur(24px) saturate(1.3);
+  opacity: 0;
+  pointer-events: none;
+  font-size: 0.85rem;
+  font-style: italic;
+  color: var(--muted);
+  transition: opacity 0.5s, transform 0.5s var(--ease-out-expo);
+}
+
+/* ─── Keyframes ─── */
+@keyframes float {
+
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+
+  50% {
+    transform: translate3d(0, -1.5rem, 0) scale(1.03);
+  }
+}
+
+@keyframes twinkle {
+
+  0%,
+  100% {
+    opacity: 0.5;
+  }
+
+  50% {
+    opacity: 0.9;
+  }
+}
+
+@keyframes count-glow {
+
+  0%,
+  100% {
+    text-shadow: none;
+  }
+
+  50% {
+    text-shadow: 0 0 36px rgba(212, 168, 75, 0.3);
+  }
+}
+
+/* ─── Responsive ─── */
+@media (max-width: 1080px) {
+
+  .split,
+  .legacy-layout,
+  .experience-card,
+  .founder-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .why-grid,
+  .door-grid,
+  .impact-grid,
+  .voices-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .moments-wall {
+    grid-template-columns: repeat(6, 1fr);
+  }
+
+  .moment--wide,
+  .moment--wide-alt {
+    grid-column: span 6;
+  }
+
+  .moment--soft,
+  .moment--soft-alt {
+    grid-column: span 3;
+  }
+
+  .moment--tall,
+  .moment--tall-alt {
+    grid-column: span 6;
+    grid-row: auto;
+  }
+
+  .growth-rail {
+    display: none;
+  }
+
+  .experience-card__visual {
+    min-height: 14rem;
+  }
+}
+
+@media (max-width: 720px) {
+
+
+  .chapter {
+    min-height: auto;
+    padding-block: 4.5rem;
+  }
+
+  .why-grid,
+  .door-grid,
+  .impact-grid,
+  .voices-grid,
+  .photo-grid--three {
+    grid-template-columns: 1fr;
+  }
+
+  .moments-wall {
+    grid-template-columns: 1fr;
+    gap: 0.6rem;
+  }
+
+  .moment,
+  .moment--wide,
+  .moment--wide-alt,
+  .moment--soft,
+  .moment--soft-alt,
+  .moment--tall,
+  .moment--tall-alt {
+    grid-column: auto;
+    min-height: 12rem;
+  }
+
+  .chapter-nav {
+    left: 0.8rem;
+    right: 0.8rem;
+    bottom: 0.8rem;
+    justify-content: center;
+  }
+
+  .chapter-nav__item {
+    width: 2.1rem;
+    height: 2.1rem;
+  }
+
+  .legacy-tree-container {
+    min-height: 30rem;
+  }
+
+  .experience-card__visual {
+    min-height: 12rem;
+  }
+}
